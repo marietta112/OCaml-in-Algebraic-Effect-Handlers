@@ -1,4 +1,4 @@
-#OCaml in Algebraic Effect Handlers
+# OCaml in Algebraic Effect Handlers
 An example program that applies the theory of algebraic effects and handlers in OCaml.
 
 ## Getting Started
@@ -6,16 +6,20 @@ The following steps help to set up a local copy of the project.
 
 ### Installation
 Installs curl
-``` sudo apt install curl
+``` 
+sudo apt install curl
 ```
 Installs opam, the package manager for OCaml.
-``` sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
+``` 
+sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)
 ```
 Sets up environment
-``` opam init 
+``` 
+opam init 
 ```
 Sets up necessary environment variables
-``` eval $(opam env) 
+``` 
+eval $(opam env) 
 ```
 Installs the OCaml compiler version 5.1.0 which is the required version for the ``` Effects ``` package
 ```
@@ -30,23 +34,28 @@ eval `opam config env`
 
 ### Compile and Run
 Compiles the project
-``` ocamlc -o program program.mli program.ml 
+``` 
+ocamlc -o program program.mli program.ml 
 ```
 
 Opens utop
-``` utop 
+``` 
+utop 
 ```
 
 Changes directory to the one where the project is found
-``` #directory "project_path";; 
+``` 
+#directory "project_path";; 
 ```
 
 Loads the project's module
-``` #load "program.cmo";; 
+``` 
+#load "program.cmo";; 
 ```
 
 Runs the main function of the project
-``` Project.mon ();; 
+``` 
+Project.mon ();; 
 ```
 
 ### Structure of the project
