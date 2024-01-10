@@ -55,7 +55,7 @@ Loads the project's module
 
 Runs the main function of the project
 ``` 
-Project.mon ();; 
+Program.mon ();; 
 ```
 
 ### Structure of the project
