@@ -25,7 +25,7 @@ let report_p n = printf "%d\n"(n);perform(Report n)
 } *)
 
 (* let run_inst f x = instrumentation f x *)
-let instrumentation () = match_with (Modular_program.comp) ()
+let instrumentation () = fun () -> match_with (Modular_program.comp) ()
 { effc = (fun (type c) (eff: c Effect.t) ->
     match eff with
     | Put_found s -> Some (fun (k : (c,_) continuation) ->

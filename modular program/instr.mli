@@ -2,4 +2,4 @@
 type s *)
 type r
 
-val run_inst : unit -> r
+val run_inst : unit -> (unit -> r)
