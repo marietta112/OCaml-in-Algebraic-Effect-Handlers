@@ -21,8 +21,6 @@ let comp () = put(5); put(6); put(-1); put(100)
                      ^^^^^^^^^^^^^^^^^^^^^^^^
     Error: This expression has type Instr.r
        but an expression was expected of type unit -> Monitor.t
-
-
-  Note that OCaml has a call-by-value semantics, thus the first argument passed to run_mon is
-  evaluated down to a value before passed as an argument to run_mon, which is not what we want.
+  
+       Instr.run_inst has to be modified to return a function of type unit -> s.
 *)
