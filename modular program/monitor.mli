@@ -1,5 +1,3 @@
-(* type a
-type b *)
 type t
 type c
 

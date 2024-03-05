@@ -1,8 +1,9 @@
 open Effect
 open Effect.Deep
 open Printf
+open Instr
 
-type t = unit 
+type t = Instr.r
 type c = unit
 type _ Effect.t += Report : int -> unit Effect.t 
 
