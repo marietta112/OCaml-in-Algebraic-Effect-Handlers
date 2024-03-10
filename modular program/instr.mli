@@ -1,5 +1,5 @@
 (* type t
 type s *)
-type r
+(* type r *)
 
-val run_inst : unit -> (unit -> r)
+val run_inst : unit -> (unit -> unit)

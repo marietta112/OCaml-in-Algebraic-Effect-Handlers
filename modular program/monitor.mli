@@ -1,5 +1,2 @@
-type t
-type c
-
-val run_mon : (unit -> t) -> unit -> c
+val run_mon : (unit -> unit) -> unit -> unit
 (* *Handles effect [report]. *)
