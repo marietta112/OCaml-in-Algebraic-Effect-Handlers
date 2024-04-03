@@ -1,14 +1,15 @@
+open Effects
 open Effect
 open Effect.Deep
 open Modular_program
-open Effects
+open Printf
 
 let report_p n = printf "%d\n"(n);perform(Effects.E.Report n)
 (* *Generates trace by printing the passed value, then performs the effect [Report] *)
 
-let instrumentation = 
+let instrumentation x = 
   fun () -> 
-    match_with (Modular_program.comp) ()
+    match_with (Modular_program.comp) x
     (* The computation passed must be of type unit -> a, for some type a. *)
     { effc = (fun (type c) (eff: c Effect.t) ->
         match eff with
@@ -28,4 +29,4 @@ let instrumentation =
   (* We return a function instead of the match_with clause since this handler is passed to another 
      handler as an argument. *)  
 
-let run_inst =  instrumentation
+let run_inst () =  instrumentation ()

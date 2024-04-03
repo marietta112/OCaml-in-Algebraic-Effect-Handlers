@@ -1,1 +1,1 @@
-val run_inst : unit -> unit
+val run_inst : unit -> (unit -> unit)
