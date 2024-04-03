@@ -1,4 +1,5 @@
 open Effects
+open Effect
 
 let mem = ref 0
 let put n = mem := n; perform(Effects.E.Put n)
