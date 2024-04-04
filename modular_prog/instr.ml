@@ -14,7 +14,7 @@ let instrumentation x =
     { effc = (fun (type c) (eff: c Effect.t) ->
         match eff with
         | Effects.E.Put s -> 
-          Some (fun (k : (c,_) continuation) -> report_p(s); continue k ())
+          Some (fun (k : (c,_) continuation) -> report_p(s); continue k ()) (* printf "testing\n" *)
           (* The continuation type is a pair (x, y) - x is the type of the value passed to 
              the continuation for coputation to resume and y is the type of the value returned by
              the continuation. *)
