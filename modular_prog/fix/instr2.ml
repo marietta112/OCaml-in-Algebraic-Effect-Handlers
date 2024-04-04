@@ -4,11 +4,8 @@ open Effect.Deep
 open Modular_program2
 open Printf
 
-(* let report_p n = Utils.E.trace := (!(Utils.E.trace) ^ string_of_int n)^(" "); printf "trace = %s\n" (!(Utils.E.trace))  *)
 let report_p n = Utils.E.trace_lst := n::!(Utils.E.trace_lst)
-
-
-(* *Generates trace by printing the passed value, then performs the effect [Report] *)
+(* *Generates trace by storing integer in a list *)
 
 let instrumentation x = 
     match_with (Modular_program2.comp) x
@@ -16,7 +13,7 @@ let instrumentation x =
     { effc = (fun (type c) (eff: c Effect.t) ->
         match eff with
         | Utils.E.Put s -> 
-          Some (fun (k : (c,_) continuation) -> report_p(s); continue k ()) (* printf "testing\n" *)
+          Some (fun (k : (c,_) continuation) -> report_p(s); continue k ())
           (* The continuation type is a pair (x, y) - x is the type of the value passed to 
              the continuation for coputation to resume and y is the type of the value returned by
              the continuation. *)
