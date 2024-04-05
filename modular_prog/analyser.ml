@@ -5,7 +5,7 @@ open Modular_program
 open Printf
 
 let report_p n = printf "%d\n"(n)
-(* *Generates trace by printing the passed value, then performs the effect [Report] *)
+(* *Generates trace by printing the passed value only *)
 
 let analysis x = 
     match_with (Modular_program.comp) x
@@ -20,6 +20,10 @@ let analysis x =
           (* The continuation type is a pair (x, y) - x is the type of the value passed to 
              the continuation for coputation to resume and y is the type of the value returned by
              the continuation. *)
+
+          (* Once the continuation is finished, it returns to the point after the continuation
+             was executed. Any commands found at this point will be executed.
+          *)
         | _ -> None 
         (* Forwards unhandled effects to the outer handler *)
       );
