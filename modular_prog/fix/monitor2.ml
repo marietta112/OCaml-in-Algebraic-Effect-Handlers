@@ -1,7 +1,6 @@
 open Effect
 open Effect.Deep
 open Printf
-open Instr
 open Utils
 open List
 

@@ -1,6 +1,5 @@
 open Instr2
 open Monitor2
-open Modular_program
 open Utils
 
 let run1 () = Instr2.run_inst2 ()
