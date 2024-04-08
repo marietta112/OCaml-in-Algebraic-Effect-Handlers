@@ -4,5 +4,5 @@ val put : int -> unit
 val get : unit -> int
 (* *Takes a unit, returns the integer stored in memory *)
 
-val comp : unit -> unit
+val main : unit -> unit
 (* *Program using [put] and [get] *)
