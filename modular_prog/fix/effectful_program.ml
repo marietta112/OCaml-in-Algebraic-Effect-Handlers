@@ -1,12 +1,11 @@
 open Utils
-open Utils2
 open Effect
 
 (* Variable that acts as a piece of memory to be updated and read from. *)
 let mem = ref 0
 
 (* *Modifies the value of [mem] and performs the effect [Put]. *)
-let put n = mem := n; perform(Utils2.E.Put n)
+let put n = mem := n; perform(Utils.E.Put n)
 
 (* *Dereferences [mem] to return the value stored. *)
 let get () = !mem

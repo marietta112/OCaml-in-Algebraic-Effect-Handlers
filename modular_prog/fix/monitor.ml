@@ -7,7 +7,7 @@ open Utils
    an effect handler. With each [Put], it checks if the argument passed is -1. If it is, an 
     error message is printed on the console. *)
 
-let monitor1 x = match_with (Effectul_program.main) x
+let monitor1 x = match_with (Effectful_program.main) x
 {
   effc = (fun (type b) (eff: b Effect.t) ->
     match eff with
@@ -31,7 +31,7 @@ let sum_monitor x = match_with (Effectful_program.main) x
   effc = (fun (type b) (eff: b Effect.t) ->
     match eff with
     | Utils.E.Put s -> 
-      Some (fun (k: (b,_) continuation) -> printf "Sum: %d\n" (!Utils.E.sum);
+      Some (fun (k: (b,_) continuation) ->
       if !(Utils.E.sum) < 500 then Utils.E.sum := !(Utils.E.sum) + s
       else printf "Total sum of puts exceeded 500.\n"; continue k ())
     | _ -> None
@@ -41,3 +41,5 @@ let sum_monitor x = match_with (Effectful_program.main) x
 }
 
 let run_sum_mon () = sum_monitor ()
+
+(* ---------------------------------------------------------------------------------------------------------------------------- *)
