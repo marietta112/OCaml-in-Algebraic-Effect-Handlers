@@ -61,11 +61,53 @@ let temp_monitor x = match_with (Effectful_program.main) x
         )
     | _ -> None
   );
-  (* If the previous number was even (resp. odd) and the current number is even (resp. odd) then
-     we print an error statement on the screen. Otherwise, nothing happens and in all cases 
-     the continuation is resumed by giving it the unit value. *)
+  (* If [flag] has value 2, then, the [Put] we have encountered is the first one, therefore, we 
+     update [flag] to 0 if the integer passed to [Put] is even and 1 if it is odd. 
+     
+     If [flag] has value 0 or 1, then, the current [Put] is not the first one. If the 
+     integer passed to [Put] is even and [flag] is 0, then the previous integer was also even 
+     and and error is reported to the screen. However, if [flag] is set to 1, then this is allowed,
+     we update [flag] to 0 for the next iteration. Similarly for the case when the integer passed
+     to [Put] is odd. *)
   exnc = raise; (* Optional *)
   retc = fun x-> x (* Required *)
 }
 
 let run_temporal_mon () = temp_monitor ()
+
+(* ---------------------------------------------------------------------------------------------------------------------------- *)
+
+(* [monitor2_l1] keeps track of the integers passed to [put] by storing the most recent one in [prev]. *)
+let mon2_l1 x = fun () -> 
+  match_with (Effectful_program.main) x
+  {
+    effc = (fun (type b) (eff: b Effect.t) ->
+      match eff with
+      | Utils.E.Put s -> 
+        Some (fun (k: (b,_) continuation) -> Utils.E.prev := s; continue k ()
+          )
+      | _ -> None
+    );
+    
+    exnc = raise; (* Optional *)
+    retc = fun x-> x (* Required *)
+  }
+(* Here we must return a function since [mon2_l1] will be passed to [mon_l2] instead of the computation. *)
+
+  let mon2_l2 f = match_with f ()
+  {
+    effc = (fun (type b) (eff: b Effect.t) ->
+      match eff with
+      | Utils.E.Get (y, ()) -> 
+        Some (fun (k: (b,_) continuation) -> 
+          if !y != !Utils.E.prev 
+          then printf "The previous [put] stored value %d but the current [get] retrieved value %d.\n" (!Utils.E.prev) (!y)
+          else printf "[get] retrieved the same value as the previous [put].\n"; continue k (!y) )
+      | _ -> None
+    );
+    
+    exnc = raise; (* Optional *)
+    retc = fun x-> x (* Required *)
+  }
+
+let run_mon2 () =  mon2_l2(mon2_l1 ())
