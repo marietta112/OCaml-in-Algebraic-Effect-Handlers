@@ -53,10 +53,12 @@ Loads the project's modules
 load "utils.cmo";; #load "effectful_program.cmo";; #load "monitor.cmo";; #load "run_file.cmo";;
 ```
 
-Runs a monitor from the available monitors in ``` Monitor```           
+Runs a monitor from the available monitors in ```Monitor```           
 ``` 
 Run_file2.mon ();; 
 ```
 
 ### Structure of the project
+The files ```effectful_program.ml``` and ```effectful_program.mli``` contain the definition of the operations [put] and [get] along with a sample program [main] that applies them. 
 
+In ```monitor.ml``` and ```monitor.mli``` we have several monitor examples, expressed using algebraic effect handlers. We make use of these monitors in ```run_file2.ml```, where a monitor is used by calling its respective run function. 
