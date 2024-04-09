@@ -35,7 +35,7 @@ eval `opam config env`
 ### Compile and Run
 Compiles the project
 ``` 
-ocamlc -o program program.mli program.ml 
+ocamlc -o my_file utils.ml effectful_program.mli effectful_program.ml monitor.mli monitor.ml run_file2.ml
 ```
 
 Opens utop
@@ -45,18 +45,18 @@ utop
 
 Changes directory to the one where the project is found
 ``` 
-#directory "project_path";; 
+#directory "project_path/modular_prog/fix";; 
 ```
 
-Loads the project's module
+Loads the project's modules
 ``` 
-#load "program.cmo";; 
+load "utils.cmo";; #load "effectful_program.cmo";; #load "monitor.cmo";; #load "run_file.cmo";;
 ```
 
-Runs the main function of the project
+Runs a monitor from the available monitors in ``` Monitor```           
 ``` 
-Program.mon ();; 
+Run_file2.mon ();; 
 ```
 
 ### Structure of the project
-The project contains an interface file (program.mli) and an implementation file (program.ml). The interface file exposes the signature of three operations that are effectful, namely [put], [get] and [report_p], along with [mon] which acts on these three operations. The implementation file provides a meaning to these operations, where [mon] handles a sample computation using two composite handlers that print the value passed to [put], unless the integer is negative one. In this case, a warning message is printed to the console.
+
