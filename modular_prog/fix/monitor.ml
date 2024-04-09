@@ -111,3 +111,37 @@ let mon2_l1 x = fun () ->
   }
 
 let run_mon2 () =  mon2_l2(mon2_l1 ())
+
+(* ---------------------------------------------------------------------------------------------------------------------------- *)
+
+(* [mon3_l1] is a monitor that keeps track of the last integer passed to [Put] and
+   keeps a running total of the sum of these integers. An error is reported if the sum
+   exceeds 500. It also check that whenever we try to retreive an integer, its value should be
+   the same value passed to the most recent [put]. This monitor combines [sum_monitor], [mon2_l1] 
+   and [mon2_l1]. *)
+
+let mon3_l1 x = 
+fun () ->  
+  match_with (Effectful_program.main) x
+  {
+    effc = (fun (type b) (eff: b Effect.t) ->
+      match eff with
+      | Utils.E.Put s -> 
+        Some (fun (k: (b,_) continuation) -> Utils.E.prev := s;
+        if !(Utils.E.sum) < 500 then Utils.E.sum := !(Utils.E.sum) + s
+        else printf "Total sum of puts exceeded 500.\n"; continue k ())
+      (* | Utils.E.Get (y, ()) -> 
+        Some (fun (k: (b,_) continuation) -> 
+          if !y != !Utils.E.prev 
+          then printf "The previous [put] stored value %d but the current [get] retrieved value %d.\n" (!Utils.E.prev) (!y)
+          else printf "[get] retrieved the same value as the previous [put].\n"; continue k (!y) ) *)
+      | _ -> None
+    );
+    exnc = raise; (* Optional *)
+    retc = fun x-> x (* Required *)
+  }
+(* mon3_l1 () *)
+let run_mon3 () = mon2_l2(mon3_l1 ()) 
+
+(* Alternatively, this can all be done in one handler by removing 'fun () ->' in line 124,
+   uncomment the section on [Get] in the [effc] field and simply define [run_mon3] as mon3_l1 (). *)
