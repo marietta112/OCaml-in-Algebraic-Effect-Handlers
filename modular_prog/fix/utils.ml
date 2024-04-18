@@ -2,7 +2,7 @@ module E = struct
   type _ Effect.t += Put : int -> unit Effect.t
   
   (* Effect that takes in a variable of type int ref and the unit, which returns an integer. *)
-  type _ Effect.t += Get : (int ref) * unit -> int Effect.t
+  type _ Effect.t += Get : int ref -> int Effect.t
 
   (* Stores the total sum of integers. To be used for the [sum_monitor] only. *)
   let sum : int ref = ref 0

@@ -98,7 +98,7 @@ let mon2_l1 x = fun () ->
   {
     effc = (fun (type b) (eff: b Effect.t) ->
       match eff with
-      | Utils.E.Get (y, ()) -> 
+      | Utils.E.Get y -> 
         Some (fun (k: (b,_) continuation) -> 
           if !y != !Utils.E.prev 
           then printf "The previous [put] stored value %d but the current [get] retrieved value %d.\n" (!Utils.E.prev) (!y)
