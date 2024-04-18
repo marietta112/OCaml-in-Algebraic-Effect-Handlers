@@ -4,6 +4,9 @@ module E = struct
   (* Effect that takes in a variable of type int ref and the unit, which returns an integer. *)
   type _ Effect.t += Get : int ref -> int Effect.t
 
+  (* Effect that initialises a variable : int ref with a value int *)
+  type _ Effect.t += Init : int ref * int -> unit Effect.t
+
   (* Stores the total sum of integers. To be used for the [sum_monitor] only. *)
   let sum : int ref = ref 0
   
@@ -13,4 +16,11 @@ module E = struct
 
   (* Stores the previous integer. *)
   let prev : int ref = ref 0
+
+
+  (* Exceptions raised for monitors. *)
+  exception Invalid_value of int
+  exception Exceeded_value of int 
+  exception Not_alternating
+  exception Inconsistent
 end
