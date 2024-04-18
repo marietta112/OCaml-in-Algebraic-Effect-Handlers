@@ -11,7 +11,10 @@ let monitor1 x = match_with (Effectful_program.main) x
 {
   effc = (fun (type b) (eff: b Effect.t) ->
     match eff with
-    | Utils.E.Put s -> 
+    (* Simply store the passed value [s] in [loc]. Assuming that [loc] is found in [Utils] *)
+    | Utils.E.Init (loc, s) -> 
+      Some (fun (k: (b,_) continuation) -> loc := s; continue k ())
+    | Utils.E.Put (loc,s) -> 
       Some (fun (k: (b,_) continuation) -> 
       if s = (-1) then (printf "Put with value -1 encountered.\n"; discontinue k (Utils.E.Invalid_value s))
       else continue k ())
@@ -34,7 +37,9 @@ let sum_monitor x = match_with (Effectful_program.main) x
 {
   effc = (fun (type b) (eff: b Effect.t) ->
     match eff with
-    | Utils.E.Put s -> 
+    | Utils.E.Init (loc, s) -> 
+      Some (fun (k: (b,_) continuation) -> loc := s; continue k ())
+    | Utils.E.Put (loc,s) -> 
       Some (fun (k: (b,_) continuation) ->
       if !(Utils.E.sum) < 500 then (Utils.E.sum := !(Utils.E.sum) + s; continue k ())
       else printf "Total sum of puts exceeded 500.\n" ; discontinue k (Utils.E.Exceeded_value 500))
@@ -56,7 +61,9 @@ let temp_monitor x = match_with (Effectful_program.main) x
 {
   effc = (fun (type b) (eff: b Effect.t) ->
     match eff with
-    | Utils.E.Put s -> 
+    | Utils.E.Init (loc, s) -> 
+      Some (fun (k: (b,_) continuation) -> loc := s; continue k ())
+    | Utils.E.Put (loc,s) -> 
       Some (fun (k: (b,_) continuation) ->
           if !Utils.E.flag == 2 then (if s mod 2 == 0 then (Utils.E.flag := 0; continue k ()) else (Utils.E.flag := 1; continue k ()))
           else if (s mod 2 == 0) then 
@@ -91,7 +98,7 @@ let mon2_l1 x = fun () ->
   {
     effc = (fun (type b) (eff: b Effect.t) ->
       match eff with
-      | Utils.E.Put s -> 
+      | Utils.E.Put (loc,s) -> 
         Some (fun (k: (b,_) continuation) -> Utils.E.prev := s; continue k ()
           )
       | _ -> None
@@ -134,7 +141,7 @@ fun () ->
   {
     effc = (fun (type b) (eff: b Effect.t) ->
       match eff with
-      | Utils.E.Put s -> 
+      | Utils.E.Put (loc,s) -> 
         Some (fun (k: (b,_) continuation) -> Utils.E.prev := s;
         if !(Utils.E.sum) < 500 then (Utils.E.sum := !(Utils.E.sum) + s;continue k ())
         else printf "Total sum of puts exceeded 500.\n"; discontinue k (Utils.E.Exceeded_value 500))
