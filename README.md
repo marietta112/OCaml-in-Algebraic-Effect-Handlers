@@ -50,7 +50,7 @@ Changes directory to the one where the project is found
 
 Loads the project's modules
 ``` 
-load "utils.cmo";; #load "effectful_program.cmo";; #load "monitor.cmo";; #load "run_file.cmo";;
+#load "utils.cmo";; #load "effectful_program.cmo";; #load "monitor.cmo";; #load "run_file2.cmo";;
 ```
 
 Runs a monitor from the available monitors in ```Monitor```           
