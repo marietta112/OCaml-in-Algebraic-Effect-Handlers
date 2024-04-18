@@ -36,8 +36,8 @@ let sum_monitor x = match_with (Effectful_program.main) x
     match eff with
     | Utils.E.Put s -> 
       Some (fun (k: (b,_) continuation) ->
-      if !(Utils.E.sum) < 500 then Utils.E.sum := !(Utils.E.sum) + s
-      else printf "Total sum of puts exceeded 500.\n"; continue k ())
+      if !(Utils.E.sum) < 500 then (Utils.E.sum := !(Utils.E.sum) + s; continue k ())
+      else printf "Total sum of puts exceeded 500.\n" ; discontinue k (Utils.E.Exceeded_value 500))
     | Utils.E.Get x -> 
       Some (fun (k: (b,_) continuation) -> continue k (!x))
     | _ -> None
@@ -58,12 +58,12 @@ let temp_monitor x = match_with (Effectful_program.main) x
     match eff with
     | Utils.E.Put s -> 
       Some (fun (k: (b,_) continuation) ->
-          if !Utils.E.flag == 2 then (if s mod 2 == 0 then Utils.E.flag := 0 else Utils.E.flag := 1)
+          if !Utils.E.flag == 2 then (if s mod 2 == 0 then (Utils.E.flag := 0; continue k ()) else (Utils.E.flag := 1; continue k ()))
           else if (s mod 2 == 0) then 
-            (if !Utils.E.flag == 0 then printf "Two consecutive evens found.\n"
-                                      else Utils.E.flag := 0)
-          else (if !Utils.E.flag == 1 then printf "Two consecutive odds found.\n" 
-                                          else Utils.E.flag := 1) ; continue k ()
+            (if !Utils.E.flag == 0 then (printf "Two consecutive evens found.\n"; discontinue k Utils.E.Not_alternating)
+                                      else Utils.E.flag := 0; continue k ())
+          else (if !Utils.E.flag == 1 then (printf "Two consecutive odds found.\n"; discontinue k Utils.E.Not_alternating) 
+                                          else Utils.E.flag := 1; continue k ()) 
         )
     | Utils.E.Get x -> 
       Some (fun (k: (b,_) continuation) -> continue k (!x))    
@@ -109,8 +109,8 @@ let mon2_l1 x = fun () ->
       | Utils.E.Get y -> 
         Some (fun (k: (b,_) continuation) -> 
           if !y != !Utils.E.prev 
-          then printf "The previous [put] stored value %d but the current [get] retrieved value %d.\n" (!Utils.E.prev) (!y)
-          else printf "[get] retrieved the same value as the previous [put].\n"; continue k (!y) )
+          then (printf "The previous [put] stored value %d but the current [get] retrieved value %d.\n" (!Utils.E.prev) (!y); discontinue k Utils.E.Inconsistent)
+          else (printf "[get] retrieved the same value as the previous [put].\n"; continue k (!y)) )
       | _ -> None
     );
     
@@ -136,8 +136,8 @@ fun () ->
       match eff with
       | Utils.E.Put s -> 
         Some (fun (k: (b,_) continuation) -> Utils.E.prev := s;
-        if !(Utils.E.sum) < 500 then Utils.E.sum := !(Utils.E.sum) + s
-        else printf "Total sum of puts exceeded 500.\n"; continue k ())
+        if !(Utils.E.sum) < 500 then (Utils.E.sum := !(Utils.E.sum) + s;continue k ())
+        else printf "Total sum of puts exceeded 500.\n"; discontinue k (Utils.E.Exceeded_value 500))
       (* | Utils.E.Get (y, ()) -> 
         Some (fun (k: (b,_) continuation) -> 
           if !y != !Utils.E.prev 
