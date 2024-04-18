@@ -13,7 +13,7 @@ let get () = !mem; perform(Utils.E.Get mem)
 
 (* [x] is a temporary variable in the expression [comp], which is a sequence of [put] and [get]. *)
 let main () = let x = (ref 0) in 
-              let comp () = put(199); x := get (); print_endline ""; 
-              put(200); print_endline ""; put(110); print_endline ""; put(10); 
+              let comp () = put(199); x := get (); print_int !x; print_endline "";
+              put(-1); print_endline ""; put(110); print_endline ""; put(10); 
               x := get (); print_endline ""
               in comp ()

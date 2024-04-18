@@ -13,7 +13,11 @@ let monitor1 x = match_with (Effectful_program.main) x
     match eff with
     | Utils.E.Put s -> 
       Some (fun (k: (b,_) continuation) -> 
-      if s = (-1) then printf "Put with value -1 encountered.\n"; continue k ())
+      if s = (-1) then (printf "Put with value -1 encountered.\n"; discontinue k (Utils.E.Invalid_value s))
+      else continue k ())
+    (* If a [Get] is found, ignore and continue. *)    
+    | Utils.E.Get x -> 
+      Some (fun (k: (b,_) continuation) -> continue k (!x))
     | _ -> None
   );
   exnc = raise; (* Optional *)
@@ -34,6 +38,8 @@ let sum_monitor x = match_with (Effectful_program.main) x
       Some (fun (k: (b,_) continuation) ->
       if !(Utils.E.sum) < 500 then Utils.E.sum := !(Utils.E.sum) + s
       else printf "Total sum of puts exceeded 500.\n"; continue k ())
+    | Utils.E.Get x -> 
+      Some (fun (k: (b,_) continuation) -> continue k (!x))
     | _ -> None
   );
   exnc = raise; (* Optional *)
@@ -59,6 +65,8 @@ let temp_monitor x = match_with (Effectful_program.main) x
           else (if !Utils.E.flag == 1 then printf "Two consecutive odds found.\n" 
                                           else Utils.E.flag := 1) ; continue k ()
         )
+    | Utils.E.Get x -> 
+      Some (fun (k: (b,_) continuation) -> continue k (!x))    
     | _ -> None
   );
   (* If [flag] has value 2, then, the [Put] we have encountered is the first one, therefore, we 
