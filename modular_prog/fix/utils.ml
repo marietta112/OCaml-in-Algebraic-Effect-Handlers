@@ -1,5 +1,6 @@
 module E = struct
-  type _ Effect.t += Put : int -> unit Effect.t
+  (* type _ Effect.t += Put : int -> unit Effect.t *)
+  type _ Effect.t += Put : int ref * int -> unit Effect.t
   
   (* Effect that takes in a variable of type int ref and the unit, which returns an integer. *)
   type _ Effect.t += Get : int ref -> int Effect.t
@@ -17,6 +18,11 @@ module E = struct
   (* Stores the previous integer. *)
   let prev : int ref = ref 0
 
+  let mem1 : int ref = ref 0
+  let mem2 : int ref = ref 0
+  let mem3 : int ref = ref 0
+  let mem4 : int ref = ref 0
+  let mem5 : int ref = ref 0
 
   (* Exceptions raised for monitors. *)
   exception Invalid_value of int
