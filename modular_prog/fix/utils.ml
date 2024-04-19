@@ -1,13 +1,4 @@
 module E = struct
-  (* type _ Effect.t += Put : int -> unit Effect.t *)
-  type _ Effect.t += Put : int ref * int -> unit Effect.t
-  
-  (* Effect that takes in a variable of type int ref and the unit, which returns an integer. *)
-  type _ Effect.t += Get : int ref -> int Effect.t
-
-  (* Effect that initialises a variable : int ref with a value int *)
-  type _ Effect.t += Init : int ref * int -> unit Effect.t
-
   (* Stores the total sum of integers. To be used for the [sum_monitor] only. *)
   let sum : int ref = ref 0
   
@@ -18,11 +9,24 @@ module E = struct
   (* Stores the previous integer. *)
   let prev : int ref = ref 0
 
-  let mem1 : int ref = ref 0
-  let mem2 : int ref = ref 0
-  let mem3 : int ref = ref 0
-  let mem4 : int ref = ref 0
-  let mem5 : int ref = ref 0
+  (* Record for variables to keep track of their individual running total. *)
+  type var = { mutable value : int ; mutable total : int  }
+
+  (* Variables *)
+  let mem1 : var = {value = 0; total = 0}
+  let mem2 : var = {value = 0; total = 0}
+  let mem3 : var = {value = 0; total = 0}
+  let mem4 : var = {value = 0; total = 0}
+  let mem5 : var = {value = 0; total = 0}
+
+  (* type _ Effect.t += Put : int -> unit Effect.t *)
+  type _ Effect.t += Put : var * int -> unit Effect.t
+  
+  (* Effect that takes in a variable of type int ref and the unit, which returns an integer. *)
+  type _ Effect.t += Get : var -> int Effect.t
+
+  (* Effect that initialises a variable : int ref with a value int *)
+  type _ Effect.t += Init : var * int -> unit Effect.t
 
   (* Exceptions raised for monitors. *)
   exception Invalid_value of int
