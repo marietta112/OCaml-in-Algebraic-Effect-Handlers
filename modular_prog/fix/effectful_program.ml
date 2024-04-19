@@ -31,7 +31,7 @@ let get (var: Utils.E.var) = var.value; perform(Utils.E.Get var)
 
 let main () = let x = (ref 0) in 
               let comp () = init Utils.E.mem1 0; init Utils.E.mem2 !Utils.E.prev; 
-                            put Utils.E.mem1 400; put Utils.E.mem2 (-1); put Utils.E.mem1 400; 
+                            put Utils.E.mem1 400; x:= get Utils.E.mem1; put Utils.E.mem2 (-1); put Utils.E.mem1 400; 
                             print_int Utils.E.mem1.value; print_endline ""; 
                             print_int Utils.E.mem2.value; print_endline ""
               in comp ()

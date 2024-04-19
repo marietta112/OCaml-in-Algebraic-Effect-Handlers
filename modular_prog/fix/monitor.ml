@@ -119,7 +119,7 @@ let run_temporal_mon () = temp_monitor ()
 (* ---------------------------------------------------------------------------------------------------------------------------- *)
 
 (* [monitor2_l1] keeps track of the integers passed to [put] by storing the most recent one in [prev]. *)
-let mon2_l1 x = fun () -> 
+(* let mon2_l1 x = fun () -> 
   match_with (Effectful_program.main) x
   {
     effc = (fun (type b) (eff: b Effect.t) ->
@@ -132,17 +132,20 @@ let mon2_l1 x = fun () ->
     
     exnc = raise; (* Optional *)
     retc = fun x-> x (* Required *)
-  }
-(* Here we must return a function since [mon2_l1] will be passed to [mon_l2] instead of the computation. *)
+  } <- was commented since it can be merged into one handler with [Get] & since we can have multiple memory locations. *)
 
-  let mon2_l2 f = match_with f ()
+  let mon2_l2 f = match_with (Effectful_program.main) ()
   {
     effc = (fun (type b) (eff: b Effect.t) ->
       match eff with
+      | Utils.E.Init (loc, s) -> 
+        Some (fun (k: (b,_) continuation) -> loc.value <- s; continue k ())
+      | Utils.E.Put (loc,s) -> 
+        Some (fun (k: (b,_) continuation) -> loc.prev <- s; continue k ())
       | Utils.E.Get y -> 
         Some (fun (k: (b,_) continuation) -> 
-          if y.value != !Utils.E.prev 
-          then (printf "The previous [put] stored value %d but the current [get] retrieved value %d.\n" (!Utils.E.prev) (y.value); discontinue k Utils.E.Inconsistent)
+          if y.value != y.prev 
+          then (printf "The previous [put] stored value %d but the current [get] retrieved value %d.\n" (y.prev) (y.value); discontinue k Utils.E.Inconsistent)
           else (printf "[get] retrieved the same value as the previous [put].\n"; continue k (y.value)) )
       | _ -> None
     );
@@ -151,7 +154,7 @@ let mon2_l1 x = fun () ->
     retc = fun x-> x (* Required *)
   }
 
-let run_mon2 () =  mon2_l2(mon2_l1 ())
+let run_mon2 () =  mon2_l2 ()
 
 (* ---------------------------------------------------------------------------------------------------------------------------- *)
 

@@ -10,14 +10,14 @@ module E = struct
   let prev : int ref = ref 0
 
   (* Record for variables to keep track of their individual running total. *)
-  type var = { mutable value : int ; mutable total : int  }
+  type var = { mutable value : int ; mutable total : int; mutable prev : int }
 
   (* Variables *)
-  let mem1 : var = {value = 0; total = 0}
-  let mem2 : var = {value = 0; total = 0}
-  let mem3 : var = {value = 0; total = 0}
-  let mem4 : var = {value = 0; total = 0}
-  let mem5 : var = {value = 0; total = 0}
+  let mem1 : var = {value = 0; total = 0; prev = 0}
+  let mem2 : var = {value = 0; total = 0; prev = 0}
+  let mem3 : var = {value = 0; total = 0; prev = 0}
+  let mem4 : var = {value = 0; total = 0; prev = 0}
+  let mem5 : var = {value = 0; total = 0; prev = 0}
 
   (* type _ Effect.t += Put : int -> unit Effect.t *)
   type _ Effect.t += Put : var * int -> unit Effect.t
