@@ -4,6 +4,8 @@ val run_mon1 : unit -> unit
 (* A monitor that checks that the running total of the integers stored in memory is less than 500. *)
 val run_sum_mon : unit -> unit
 
+val run_sum_mon2 : unit -> unit
+
 (* A monitor that checks that integers stored in memory alternate between odd and even. *)
 val run_temporal_mon : unit -> unit
 

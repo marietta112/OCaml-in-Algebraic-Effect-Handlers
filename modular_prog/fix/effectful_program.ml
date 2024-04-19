@@ -20,17 +20,18 @@ let main () = let x = (ref 0) in
               x := get (); print_endline ""
               in comp ()
 *)
-let init loc n = perform(Utils.E.Init (loc,n))
+let init var n = perform(Utils.E.Init (var,n))
+
+(* var is a record with its first entry being its value. *)
+let put (var: Utils.E.var) (n: int) = (var.value <- n); perform(Utils.E.Put (var, n))
 
 
-let put loc n = (loc := n); perform(Utils.E.Put (loc, n))
+let get (var: Utils.E.var) = var.value; perform(Utils.E.Get var)
 
-
-let get loc = !loc; perform(Utils.E.Get loc)
 
 let main () = let x = (ref 0) in 
               let comp () = init Utils.E.mem1 0; init Utils.E.mem2 !Utils.E.prev; 
                             put Utils.E.mem1 400; put Utils.E.mem2 (-1); put Utils.E.mem1 400; 
-                            print_int !Utils.E.mem1; print_endline ""; 
-                            print_int !Utils.E.mem2; print_endline ""
+                            print_int Utils.E.mem1.value; print_endline ""; 
+                            print_int Utils.E.mem2.value; print_endline ""
               in comp ()
