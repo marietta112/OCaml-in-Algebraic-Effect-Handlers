@@ -7,5 +7,7 @@ val get : Utils.E.var -> int
 
 val init : Utils.E.var -> int -> unit
 
+val alias : Utils.E.var -> Utils.E.var -> unit
+
 val main : unit -> unit
 (* *Program using [put] and [get] *)

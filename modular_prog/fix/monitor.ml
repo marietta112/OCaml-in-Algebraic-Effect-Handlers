@@ -189,3 +189,27 @@ let run_mon3 () = mon2_l2(mon3_l1 ())
 
 (* Alternatively, this can all be done in one handler by removing 'fun () ->' in line 124,
    uncomment the section on [Get] in the [effc] field and simply define [run_mon3] as mon3_l1 (). *)
+(* --------------------------------------------------------------------------------------------------------------- *)
+let alias_monitor () = match_with (Effectful_program.main) ()
+{
+  effc = (fun (type b) (eff: b Effect.t) ->
+    match eff with
+    (* Simply store the passed value [s] in [loc]. Assuming that [loc] is found in [Utils] *)
+    | Utils.E.Init (loc, s) -> 
+      Some (fun (k: (b,_) continuation) -> loc.value <- s; continue k ())
+    | Utils.E.Put (loc,s) -> 
+      Some (fun (k: (b,_) continuation) -> continue k ())
+    (* If a [Get] is found, ignore and continue. *)    
+    | Utils.E.Get x -> 
+      Some (fun (k: (b,_) continuation) -> continue k (x.value))
+    | Utils.E.Alias (x, y) -> 
+      Some (fun (k: (b,_) continuation) -> print_int Utils.E.mem1.value; print_endline ""; print_int Utils.E.mem2.value; print_endline "";
+                                           if x.value != y.value then discontinue k Utils.E.Alias_Error
+                                            else continue k () )
+    | _ -> None
+  );
+  exnc = raise; (* Optional *)
+  retc = fun x-> x (* Required *)
+}
+
+let run_alias_mon () = alias_monitor ()

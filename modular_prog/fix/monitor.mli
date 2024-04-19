@@ -16,3 +16,5 @@ val run_mon2 : unit  -> unit
 (* A monitor that checks that the running total of the integers stored in memory is less than 500
    and checks whether the [get] operation returns the most recent integer stored in memory. *)
 val run_mon3 : unit  -> unit
+
+val run_alias_mon : unit -> unit
