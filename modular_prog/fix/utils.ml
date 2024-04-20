@@ -13,11 +13,11 @@ module E = struct
   type var = { mutable value : int ; mutable total : int; mutable prev : int }
 
   (* Variables *)
-  let mem1 : var = {value = min_int; total = 0; prev = 0}
-  let mem2 : var = {value = min_int; total = 0; prev = 0}
-  let mem3 : var = {value = min_int; total = 0; prev = 0}
-  let mem4 : var = {value = min_int; total = 0; prev = 0}
-  let mem5 : var = {value = min_int; total = 0; prev = 0}
+  let mem1 : var ref = ref {value = min_int; total = 0; prev = 0}
+  let mem2 : var ref = ref {value = min_int; total = 0; prev = 0}
+  let mem3 : var ref = ref {value = min_int; total = 0; prev = 0}
+  let mem4 : var ref = ref {value = min_int; total = 0; prev = 0}
+  let mem5 : var ref = ref {value = min_int; total = 0; prev = 0}
 
   (* type _ Effect.t += Put : int -> unit Effect.t *)
   type _ Effect.t += Put : var * int -> unit Effect.t
