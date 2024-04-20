@@ -13,14 +13,14 @@ let monitor1 x = match_with (Effectful_program.main) x
     match eff with
     (* Simply store the passed value [s] in [loc]. Assuming that [loc] is found in [Utils] *)
     | Utils.E.Init (loc, s) -> 
-      Some (fun (k: (b,_) continuation) -> loc.value <- s; continue k ())
+      Some (fun (k: (b,_) continuation) -> (!loc).value <- s; continue k ())
     | Utils.E.Put (loc,s) -> 
       Some (fun (k: (b,_) continuation) -> 
       if s = (-1) then (printf "Put with value -1 encountered.\n"; discontinue k (Utils.E.Invalid_value s))
       else continue k ())
     (* If a [Get] is found, ignore and continue. *)    
     | Utils.E.Get x -> 
-      Some (fun (k: (b,_) continuation) -> continue k (x.value))
+      Some (fun (k: (b,_) continuation) -> continue k ((!x).value))
     | _ -> None
   );
   exnc = raise; (* Optional *)
@@ -39,13 +39,13 @@ let run_mon1 () = monitor1 ()
     effc = (fun (type b) (eff: b Effect.t) ->
       match eff with
       | Utils.E.Init (loc, s) -> 
-        Some (fun (k: (b,_) continuation) -> loc.value <- s; continue k ())
+        Some (fun (k: (b,_) continuation) -> (!loc).value <- s; continue k ())
       | Utils.E.Put (loc,s) -> 
         Some (fun (k: (b,_) continuation) ->
         if !(Utils.E.sum) < 500 then (Utils.E.sum := !(Utils.E.sum) + s; continue k ())
         else printf "Total sum of puts exceeded 500.\n" ; discontinue k (Utils.E.Exceeded_value 500))
       | Utils.E.Get x -> 
-        Some (fun (k: (b,_) continuation) -> continue k (x.value))
+        Some (fun (k: (b,_) continuation) -> continue k ((!x).value))
       | _ -> None
     );
     exnc = raise; (* Optional *)
@@ -64,13 +64,13 @@ let sum_monitor2 x = match_with (Effectful_program.main) x
   effc = (fun (type b) (eff: b Effect.t) ->
     match eff with
     | Utils.E.Init (loc, s) -> 
-      Some (fun (k: (b,_) continuation) -> loc.value <- s; continue k ())
+      Some (fun (k: (b,_) continuation) -> (!loc).value <- s; continue k ())
     | Utils.E.Put (loc,s) -> 
       Some (fun (k: (b,_) continuation) ->
-      if loc.total < 500 then (loc.total <- loc.total + s; continue k ())
+      if (!loc).total < 500 then ((!loc).total <- (!loc).total + s; continue k ())
       else printf "Total sum of puts in one memory location exceeded 500.\n" ; discontinue k (Utils.E.Exceeded_value 500))
     | Utils.E.Get x -> 
-      Some (fun (k: (b,_) continuation) -> continue k (x.value))
+      Some (fun (k: (b,_) continuation) -> continue k ((!x).value))
     | _ -> None
   );
   exnc = raise; (* Optional *)
@@ -88,7 +88,7 @@ let temp_monitor x = match_with (Effectful_program.main) x
   effc = (fun (type b) (eff: b Effect.t) ->
     match eff with
     | Utils.E.Init (loc, s) -> 
-      Some (fun (k: (b,_) continuation) -> loc.value <- s; continue k ())
+      Some (fun (k: (b,_) continuation) -> (!loc).value <- s; continue k ())
     | Utils.E.Put (loc,s) -> 
       Some (fun (k: (b,_) continuation) ->
           if !Utils.E.flag == 2 then (if s mod 2 == 0 then (Utils.E.flag := 0; continue k ()) else (Utils.E.flag := 1; continue k ()))
@@ -99,7 +99,7 @@ let temp_monitor x = match_with (Effectful_program.main) x
                                           else Utils.E.flag := 1; continue k ()) 
         )
     | Utils.E.Get x -> 
-      Some (fun (k: (b,_) continuation) -> continue k (x.value))    
+      Some (fun (k: (b,_) continuation) -> continue k ((!x).value))    
     | _ -> None
   );
   (* If [flag] has value 2, then, the [Put] we have encountered is the first one, therefore, we 
@@ -139,14 +139,14 @@ let run_temporal_mon () = temp_monitor ()
     effc = (fun (type b) (eff: b Effect.t) ->
       match eff with
       | Utils.E.Init (loc, s) -> 
-        Some (fun (k: (b,_) continuation) -> loc.value <- s; continue k ())
+        Some (fun (k: (b,_) continuation) -> (!loc).value <- s; continue k ())
       | Utils.E.Put (loc,s) -> 
-        Some (fun (k: (b,_) continuation) -> loc.prev <- s; continue k ())
+        Some (fun (k: (b,_) continuation) -> (!loc).prev <- s; continue k ())
       | Utils.E.Get y -> 
         Some (fun (k: (b,_) continuation) -> 
-          if y.value != y.prev 
-          then (printf "The previous [put] stored value %d but the current [get] retrieved value %d.\n" (y.prev) (y.value); discontinue k Utils.E.Inconsistent)
-          else (printf "[get] retrieved the same value as the previous [put].\n"; continue k (y.value)) )
+          if (!y).value != (!y).prev 
+          then (printf "The previous [put] stored value %d but the current [get] retrieved value %d.\n" (!y.prev) (!y.value); discontinue k Utils.E.Inconsistent)
+          else (printf "[get] retrieved the same value as the previous [put].\n"; continue k ((!y).value)) )
       | _ -> None
     );
     
@@ -196,15 +196,15 @@ let alias_monitor () = match_with (Effectful_program.main) ()
     match eff with
     (* Simply store the passed value [s] in [loc]. Assuming that [loc] is found in [Utils] *)
     | Utils.E.Init (loc, s) -> 
-      Some (fun (k: (b,_) continuation) -> loc.value <- s; continue k ())
+      Some (fun (k: (b,_) continuation) -> (!loc).value <- s; continue k ())
     | Utils.E.Put (loc,s) -> 
       Some (fun (k: (b,_) continuation) -> continue k ())
     (* If a [Get] is found, ignore and continue. *)    
     | Utils.E.Get x -> 
-      Some (fun (k: (b,_) continuation) -> continue k (x.value))
+      Some (fun (k: (b,_) continuation) -> continue k ((!x).value))
     | Utils.E.Alias (x, y) -> 
-      Some (fun (k: (b,_) continuation) -> print_int Utils.E.mem1.value; print_endline ""; print_int Utils.E.mem2.value; print_endline "";
-                                           if x.value != y.value then discontinue k Utils.E.Alias_Error
+      Some (fun (k: (b,_) continuation) -> print_int (!Utils.E.mem1).value; print_endline ""; print_int (!Utils.E.mem2).value; print_endline "";
+                                           if (!x).value != (!y).value then discontinue k Utils.E.Alias_Error
                                             else continue k () )
     | _ -> None
   );
