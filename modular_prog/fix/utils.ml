@@ -20,15 +20,15 @@ module E = struct
   let mem5 : var ref = ref {value = min_int; total = 0; prev = 0}
 
   (* type _ Effect.t += Put : int -> unit Effect.t *)
-  type _ Effect.t += Put : var * int -> unit Effect.t
+  type _ Effect.t += Put : var ref * int -> unit Effect.t
   
   (* Effect that takes in a variable of type int ref and the unit, which returns an integer. *)
-  type _ Effect.t += Get : var -> int Effect.t
+  type _ Effect.t += Get : var ref-> int Effect.t
 
   (* Effect that initialises a variable : int ref with a value int *)
-  type _ Effect.t += Init : var * int -> unit Effect.t
+  type _ Effect.t += Init : var ref * int -> unit Effect.t
 
-  type _ Effect.t += Alias : var * var -> unit Effect.t
+  type _ Effect.t += Alias : var ref * var ref-> unit Effect.t
 
   (* Exceptions raised for monitors. *)
   exception Invalid_value of int
