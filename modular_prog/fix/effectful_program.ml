@@ -23,22 +23,22 @@ let main () = let x = (ref 0) in
 let init var n = perform(Utils.E.Init (var,n))
 
 (* var is a record with its first entry being its value. *)
-let put (var: Utils.E.var) (n: int) = (var.value <- n); perform(Utils.E.Put (var, n))
+let put (var: Utils.E.var ref) (n: int) = (!var.value <- n); perform(Utils.E.Put (var, n))
 
 
-let get (var: Utils.E.var) = var.value; perform(Utils.E.Get var)
+let get (var: Utils.E.var ref) = !var.value; perform(Utils.E.Get var)
 
 
-let alias (x: Utils.E.var) (y: Utils.E.var) = (x := !y); perform (Utils.E.Alias (x,y))
+let alias (x: Utils.E.var ref) (y: Utils.E.var ref) = (x := !y); perform (Utils.E.Alias (x,y))
 
 
-let main' () = let x = (ref 0) in 
+(* let main' () = let x = (ref 0) in 
               let comp () = init Utils.E.mem1 0; init Utils.E.mem2 !Utils.E.prev; 
                             put Utils.E.mem1 400; x:= get Utils.E.mem1; put Utils.E.mem2 (-1); put Utils.E.mem1 400; 
                             print_int Utils.E.mem1.value; print_endline ""; 
                             print_int Utils.E.mem2.value; print_endline ""
-              in comp ()
+              in comp () *)
 
 let main () = let comp () = init Utils.E.mem1 50; init Utils.E.mem2 10; alias Utils.E.mem1 Utils.E.mem2;
-                              print_int Utils.E.mem1.value; print_endline ""; print_int Utils.E.mem2.value; print_endline "" 
+                              print_int (!Utils.E.mem1).value; print_endline ""; print_int (!Utils.E.mem2).value; print_endline "" 
                in comp ()
