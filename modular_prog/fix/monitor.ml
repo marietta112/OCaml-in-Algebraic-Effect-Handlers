@@ -206,6 +206,9 @@ let alias_monitor () = match_with (Effectful_program.main) ()
       Some (fun (k: (b,_) continuation) -> print_int (!Utils.E.mem1).value; print_endline ""; print_int (!Utils.E.mem2).value; print_endline "";
                                            if (!x).value != (!y).value then discontinue k Utils.E.Alias_Error
                                             else continue k () )
+    | Utils.E.Check (x, y) -> 
+      Some (fun (k: (b,_) continuation) -> if !x.value != !y.value then discontinue k Utils.E.Inconsistent
+                                            else continue k () )
     | _ -> None
   );
   exnc = raise; (* Optional *)

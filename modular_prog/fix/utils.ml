@@ -30,6 +30,8 @@ module E = struct
 
   type _ Effect.t += Alias : var ref * var ref-> unit Effect.t
 
+  type _ Effect.t += Check : var ref * var ref-> unit Effect.t
+
   (* Exceptions raised for monitors. *)
   exception Invalid_value of int
   exception Exceeded_value of int 

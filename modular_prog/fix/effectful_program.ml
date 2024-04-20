@@ -31,6 +31,7 @@ let get (var: Utils.E.var ref) = !var.value; perform(Utils.E.Get var)
 
 let alias (x: Utils.E.var ref) (y: Utils.E.var ref) = (x := !y); perform (Utils.E.Alias (x,y))
 
+let check (x: Utils.E.var ref) (y: Utils.E.var ref) = perform(Utils.E.Check (x,y))
 
 (* let main' () = let x = (ref 0) in 
               let comp () = init Utils.E.mem1 0; init Utils.E.mem2 !Utils.E.prev; 
@@ -40,5 +41,6 @@ let alias (x: Utils.E.var ref) (y: Utils.E.var ref) = (x := !y); perform (Utils.
               in comp () *)
 
 let main () = let comp () = init Utils.E.mem1 50; init Utils.E.mem2 10; alias Utils.E.mem1 Utils.E.mem2;
-                              print_int (!Utils.E.mem1).value; print_endline ""; print_int (!Utils.E.mem2).value; print_endline "" 
+                              print_int (!Utils.E.mem1).value; print_endline ""; print_int (!Utils.E.mem2).value; print_endline "";
+                              put Utils.E.mem2 25; check Utils.E.mem1 Utils.E.mem2 
                in comp ()
