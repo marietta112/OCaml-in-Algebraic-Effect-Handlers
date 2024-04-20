@@ -13,11 +13,11 @@ module E = struct
   type var = { mutable value : int ; mutable total : int; mutable prev : int }
 
   (* Variables *)
-  let mem1 : var = {value = 0; total = 0; prev = 0}
-  let mem2 : var = {value = 0; total = 0; prev = 0}
-  let mem3 : var = {value = 0; total = 0; prev = 0}
-  let mem4 : var = {value = 0; total = 0; prev = 0}
-  let mem5 : var = {value = 0; total = 0; prev = 0}
+  let mem1 : var = {value = min_int; total = 0; prev = 0}
+  let mem2 : var = {value = min_int; total = 0; prev = 0}
+  let mem3 : var = {value = min_int; total = 0; prev = 0}
+  let mem4 : var = {value = min_int; total = 0; prev = 0}
+  let mem5 : var = {value = min_int; total = 0; prev = 0}
 
   (* type _ Effect.t += Put : int -> unit Effect.t *)
   type _ Effect.t += Put : var * int -> unit Effect.t
@@ -28,9 +28,12 @@ module E = struct
   (* Effect that initialises a variable : int ref with a value int *)
   type _ Effect.t += Init : var * int -> unit Effect.t
 
+  type _ Effect.t += Alias : var * var -> unit Effect.t
+
   (* Exceptions raised for monitors. *)
   exception Invalid_value of int
   exception Exceeded_value of int 
   exception Not_alternating
   exception Inconsistent
+  exception Alias_Error
 end
