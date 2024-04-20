@@ -29,7 +29,7 @@ let put (var: Utils.E.var) (n: int) = (var.value <- n); perform(Utils.E.Put (var
 let get (var: Utils.E.var) = var.value; perform(Utils.E.Get var)
 
 
-let alias (x: Utils.E.var) (y: Utils.E.var) = (x = y); perform (Utils.E.Alias (x,y))
+let alias (x: Utils.E.var) (y: Utils.E.var) = (x := !y); perform (Utils.E.Alias (x,y))
 
 
 let main' () = let x = (ref 0) in 
