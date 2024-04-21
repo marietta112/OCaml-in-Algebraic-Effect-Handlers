@@ -42,5 +42,5 @@ let check (x: Utils.E.var ref) (y: Utils.E.var ref) = perform(Utils.E.Check (x,y
 
 let main () = let comp () = init Utils.E.mem1 50; init Utils.E.mem2 10; alias Utils.E.mem1 Utils.E.mem2;
                               print_int (!Utils.E.mem1).value; print_endline ""; print_int (!Utils.E.mem2).value; print_endline "";
-                              put Utils.E.mem2 25; check Utils.E.mem1 Utils.E.mem2 
+                              put Utils.E.mem2 501; check Utils.E.mem1 Utils.E.mem2; put Utils.E.mem2 (-1)
                in comp ()

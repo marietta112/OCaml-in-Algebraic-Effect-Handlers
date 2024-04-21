@@ -18,3 +18,5 @@ val run_mon2 : unit  -> unit
 val run_mon3 : unit  -> unit
 
 val run_alias_mon : unit -> unit
+
+val run_mon_props : unit -> unit
