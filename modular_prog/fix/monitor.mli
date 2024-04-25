@@ -17,6 +17,6 @@ val run_mon2 : unit  -> unit
    and checks whether the [get] operation returns the most recent integer stored in memory. *)
 val run_mon3 : unit  -> unit
 
-val run_alias_mon : unit -> unit
+(* val run_alias_mon : unit -> unit *)
 
 val run_mon_props : unit -> unit
