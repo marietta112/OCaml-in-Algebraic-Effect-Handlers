@@ -133,8 +133,8 @@ let mon2_l2 () = match_with (Effectful_program.main) ()
       Some (fun (k: (b,_) continuation) -> 
         let current = Utils.E.get_entry Utils.E.names_hash y in let prev = Utils.E.get_entry Utils.E.prev_hash y in
         if (!current) != (!prev) 
-        then (printf "The previous [put] stored value %d but the current [get] retrieved value %d.\n" (!prev) (!current); discontinue k Utils.E.Inconsistent)
-        else (printf "[get] retrieved the same value as the previous [put].\n"; continue k (!current)))
+        then (printf "The previous [put] stored value %d but the current [get] retrieved value %d.\n" (!prev) (!current); discontinue k (Utils.E.Inconsistent ("with variable " ^ y)))
+        else continue k (!current))
     | _ -> None
   );
   exnc = raise; (* Optional *)
@@ -160,8 +160,8 @@ match_with (Effectful_program.main) ()
       Some (fun (k: (b,_) continuation) -> 
         let current = Utils.E.get_entry Utils.E.names_hash y in let prev = Utils.E.get_entry Utils.E.prev_hash y in
         if (!current) != (!prev) 
-        then (printf "The previous [put] stored value %d but the current [get] retrieved value %d.\n" (!prev) (!current); discontinue k Utils.E.Inconsistent)
-        else (printf "[get] retrieved the same value as the previous [put].\n"; continue k (!current)))
+        then (printf "The previous [put] stored value %d but the current [get] retrieved value %d.\n" (!prev) (!current); discontinue k (Utils.E.Inconsistent ("with variable " ^ y)))
+        else continue k (!current))
     | _ -> None
   );
   exnc = raise; (* Optional *)
