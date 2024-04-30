@@ -35,12 +35,13 @@ module E = struct
   exception Invalid_value of int
   exception Exceeded_value of int 
   exception Not_alternating
-  exception Inconsistent
-  exception Alias_Error
+  exception Inconsistent of string
 
 let add_entry hashtbl_name first_entry second_entry = Hashtbl.add hashtbl_name first_entry second_entry 
 
-let update_entry hashtbl_name first_entry second_entry = Hashtbl.replace hashtbl_name first_entry second_entry
-
 let get_entry hashtbl_name first_entry = Hashtbl.find hashtbl_name first_entry
+
+let update_entry hashtbl_name first_entry second_entry = let mem = get_entry hashtbl_name first_entry in mem := !second_entry
+   (* Hashtbl.replace hashtbl_name first_entry second_entry *)
+
 end
